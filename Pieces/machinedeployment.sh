@@ -1,7 +1,7 @@
 #!/bin/bash
 
-vmname="elk01"
-domainname="teststack.com"
+vmname="yourhostname"
+domainname="yourdomainname.com"
 fullhostname=$(echo $vmname "." $domainname | tr -d ' ')
 
 read -p "Confirm hostname of machine to be deployed: $fullhostname -- Y/N?" -n 1 -r
