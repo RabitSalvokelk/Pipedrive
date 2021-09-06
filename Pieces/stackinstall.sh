@@ -6,6 +6,7 @@ nodename="elkmstr"
 networkhost="172.19.175.130"
 networkport="9200"
 elasticsearchhosts=$(echo "http://" $networkhost ":" $networkport | tr -d ' ')
+logstashhosts=$(echo $networkhost ":" $networkport | tr -d ' ')
 
 #install java
 sudo apt-get install default-jre -y
@@ -21,18 +22,48 @@ sudo apt-get install kibana -y
 sudo apt-get install logstash -y
 
 #elasticsearch configuration
-echo cluster.name: $clustername 								>> /etc/elasticsearch/elasticsearch.yml
-echo node.name: $nodename									>> /etc/elasticsearch/elasticsearch.yml
-echo node.data: true										>> /etc/elasticsearch/elasticsearch.yml
-echo network.host: $networkhost									>> /etc/elasticsearch/elasticsearch.yml
-echo http.port: $networkport									>> /etc/elasticsearch/elasticsearch.yml
-echo discovery.zen.ping.unicast.hosts: ['"192.168.9.2"','"192.168.9.3"','"192.168.9.4"']	>> /etc/elasticsearch/elasticsearch.yml
-echo discovery.zen.minimum_master_nodes: 2							>> /etc/elasticsearch/elasticsearch.yml
+{
+echo 'cluster.name: '$clustername''
+echo 'node.name: '$nodename''
+echo 'node.data: true;'
+echo 'network.host: '$networkhost''
+echo 'http.port: '$networkport''
+echo 'discovery.zen.ping.unicast.hosts: ['"192.168.9.2"','"192.168.9.3"','"192.168.9.4"']'
+echo 'discovery.zen.minimum_master_nodes: 2'
+}	 >> /etc/elasticsearch/elasticsearch.yml
 #kibana configuration
-echo server.host: "0.0.0.0" 									>> /etc/kibana/kibana.yml
-echo elasticsearch.hosts: $elasticsearchhosts							>> /etc/kibana/kibana.yml
+{
+echo 'server.host: "0.0.0.0"'
+echo 'elasticsearch.hosts: '$elasticsearchhosts''
+}	>> /etc/kibana/kibana.yml
 #logstash configuration
+{
+echo ' input {'
+echo ' tcp {'
+echo '   port => 5042'
+echo '   type => syslog'
+echo ' }'
+echo ''
+echo '}'
+echo ''
+echo 'filter {'
+echo ' if [type] == "syslog" {'
+echo '   grok {'
+echo '     match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }'
+echo '     add_field => [ "received_at", "%{@timestamp}" ]'
+echo '     add_field => [ "received_from", "%{host}" ]'
+echo '   }'
+echo '   date {'
+echo '     match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]'
+echo '   }'
+echo ' }'
+echo '}'
 
+echo 'output {'
+echo ' elasticsearch { hosts => ['$logstashhosts'] }'
+echo ' stdout { codec => rubydebug }'
+echo '}'
+} >> /etc/logstash/conf.d/logstash.conf
 #restart all services and enable on boot
 sudo systemctl restart logstash
 sudo systemctl enable logstash
