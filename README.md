@@ -14,6 +14,7 @@ Operating system: any supported version of Debian, Ubuntu, CentOS or Fedora.
 If using Docker -- write your own Dockerfiles, do not use containers from Docker Hub!
 All the servers can reside in the same local network.
 
+
 Minimal solution: code to install and configure:
 Cluster of 3 Elasticsearch nodes
 1 Logstash node
