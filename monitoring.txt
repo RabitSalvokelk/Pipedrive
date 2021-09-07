@@ -1,0 +1,135 @@
+#Steps to configure negios for the elk-stack  
+  
+ssh root@elk02  
+sudo apt-get install nagios-nrpe-server nagios-plugins  
+sudo nano /etc/nagios/nrpe.cfg  
+Change allowed_hosts from "allowed_hosts=127.0.0.1,::1" to "allowed_hosts=127.0.0.1,::1,172.19.175.130"  
+Add line "command[check_sda]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/sda"  
+save and exit the file  
+sudo ufw allow 5666/tcp  
+sudo ufw reload  
+/etc/init.d/nagios-nrpe-server restart  
+/etc/init.d/nagios-nrpe-server status  
+exit ssh instance  
+  
+  
+ssh root@elk03  
+sudo apt-get install nagios-nrpe-server nagios-plugins  
+sudo nano /etc/nagios/nrpe.cfg  
+Change allowed_hosts from "allowed_hosts=127.0.0.1,::1" to "allowed_hosts=127.0.0.1,::1,172.19.175.130"  
+Add line "command[check_sda]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/sda"  
+save and exit the file 
+sudo ufw allow 5666/tcp  
+sudo ufw reload  
+/etc/init.d/nagios-nrpe-server restart  
+/etc/init.d/nagios-nrpe-server status  
+exit ssh instance  
+  
+  
+ssh root@elkmstr  
+sudo apt-get install nagios4  
+sudo mkdir /etc/nagios4/objects/remotehosts  
+sudo apt-get install nagios-nrpe-server nagios-plugins-basic  
+sudo apt-get install nagios-nrpe-plugin  
+sudo nano /etc/nagios/nrpe.cfg  
+Change allowed_hosts from "allowed_hosts=127.0.0.1,::1" to "allowed_hosts=127.0.0.1,::1,172.19.175.130,172.19.175.131,172.19.175.132"  
+Add line "command[check_sda]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /dev/sda" 
+save and exit the file
+sudo ufw allow 5666/tcp  
+sudo ufw reload 
+/etc/init.d/nagios-nrpe-server restart  
+/etc/init.d/nagios-nrpe-server status
+sudo a2enmod rewrite  
+sudo a2enmod cgi    
+sudo nano /etc/nagios4/objects/remotehosts/hosts.cfg  
+Add the following: 
+"  
+define contact{  
+        contact_name                    remoteuser  
+        use                             generic-contact  
+        alias                           remoteuser  
+        email                           remoteuser@teststack.com  
+}  
+"  
+sudo nano /etc/nagios4/nagios.cfg 
+add line: "cfg_dir=/etc/nagios4/objects/remotehosts"  
+
+sudo nano /etc/nagios4/objects/remotehosts/hosts.cfg  
+Add all of the below:
+"    
+# REMOTE HOST  
+define host {   
+	use			linux-server   
+	host_name		elkmstr.teststack.com  
+	alias			elkmstr  
+	address			172.19.175.130  
+	max_check_attempts	5  
+        check_period		24x7  
+        notification_interval	30  
+        notification_period	24x7  
+} 
+define host {   
+	use			linux-server   
+	host_name		elk02.teststack.com  
+	alias			elk02  
+	address			172.19.175.131  
+	max_check_attempts	5  
+        check_period		24x7  
+        notification_interval	30  
+        notification_period	24x7  
+}   
+define host { 
+	use			linux-server   
+	host_name		elk03.teststack.com  
+	alias			elk03  
+	address			172.19.175.132  
+	max_check_attempts	5  
+        check_period		24x7  
+        notification_interval	30  
+        notification_period	24x7  
+}  
+  
+define service {  
+        use                             generic-service  
+        host_name                       elkmstr.teststack.com  
+        service_description             CPU load  
+        check_command                   check_nrpe!check_load  
+}  
+  
+define service {  
+        use                             generic-service  
+        host_name                       elkmstr.teststack.com  
+        service_description             /dev/vda1 free space  
+        check_command                   check_nrpe!check_sda  
+}  
+define service {  
+        use                             generic-service  
+        host_name                       elk02.teststack.com  
+        service_description             CPU load  
+        check_command                   check_nrpe!check_load  
+}  
+  
+define service {  
+        use                             generic-service  
+        host_name                       elk02.teststack.com  
+        service_description             /dev/vda1 free space  
+        check_command                   check_nrpe!check_sda  
+}  
+  
+define service {     
+        use                             generic-service  
+        host_name                       elk03.teststack.com  
+        service_description             CPU load  
+        check_command                   check_nrpe!check_load  
+}  
+  
+define service {  
+        use                             generic-service  
+        host_name                       elk03.teststack.com  
+        service_description             /dev/vda1 free space  
+        check_command                   check_nrpe!check_sda  
+}  
+" 
+sudo systemctl reload nagios
+
+all monitoring should now be available on the elkmstr http://localhost/nagios4/ under services
