@@ -5,14 +5,11 @@ Distributor ID:	Debian
 Description:	Debian GNU/Linux 11 (bullseye)  
 Release:		11  
 Codename:		bullseye  
-Prerequisites:  
-3 hosts of the above enviornment  
-VirtualBox  
-Network settings configured  
-ufw configured to allow ssh  
-openssh configured  
-Possibly a different enviornment   
-A lot of time  
+Prerequisites: 
+VirtualBox   
+3 guests of the above enviornment on Vbox    
+Network settings configured for all clients  
+openssh and ufw configured to allow ssh on all clients  
   
 Main code:  
 code_for_host.sh 	- should be run on elk host stack to install and configure elastic, kibana and logstash based on original_task.txt  
