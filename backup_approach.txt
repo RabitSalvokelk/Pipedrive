@@ -1,0 +1,5 @@
+
+virtualbox:		Snapshots and/or cloning full machines to local or remote storage
+elasticstack:	The only reliable and supported way to back up a cluster is by taking a snapshot. You cannot back up an Elasticsearch cluster by making copies of the data directories of its nodes. There are no supported methods to restore any data from a filesystem-level backup. If you try to restore a cluster from such a backup, it may fail with reports of corruption or missing files or other data inconsistencies, or it may appear to have succeeded having silently lost some of your data. (source: https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshot-restore.html)  
+				Snapshots can be stored in either local or remote repositories. Remote repositories can reside on Amazon S3, HDFS, Microsoft Azure, Google Cloud Storage
+nagioscore:		Creating a script that adds configuration files to an archive and uploads it to either local or remote storage
