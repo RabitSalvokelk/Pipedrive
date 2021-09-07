@@ -14,8 +14,8 @@ Network settings configured for all clients
 openssh and ufw configured to allow ssh on all clients  
 <br/>  
 Main code:  
-code_for_host.sh 	- should be run on elk host stack to install and configure elastic, kibana and logstash based on original_task.txt  
-code_for_client.sh 	- should be run on elk client/node, variables adjusted per client/node to install and configure elasticsearch based on original_task.txt  
+for_host.sh 	- should be run on elk host stack to install and configure elastic, kibana and logstash based on original_task.txt  
+for_client.sh 	- should be run on elk client/node, variables adjusted per client/node to install and configure elasticsearch based on original_task.txt  
 <br/>  
 Additional code(bonus task):  
 vm_deployment.sh	- creates and installs a new debian machine with unattended install (due to vbox having two issues with unattended install manual fixes had to be made in isolinux-txt.cfg file and pointing at pre and post install scripts. See: https://www.virtualbox.org/ticket/18410 & https://www.virtualbox.org/ticket/17335)  
