@@ -14,7 +14,8 @@ openssh and ufw configured to allow ssh on all clients
 Main code:  
 code_for_host.sh 	- should be run on elk host stack to install and configure elastic, kibana and logstash based on original_task.txt  
 code_for_client.sh 	- should be run on elk client/node, variables adjusted per client/node to install and configure elasticsearch based on original_task.txt  
-  
+
+Additional code(bonus task):  
 vm_deployment.sh	- creates and installs a new debian machine with unattended install (due to vbox having two issues with unattended install manual fixes had to be made in isolinux-txt.cfg file and pointing at pre and post install scripts. See: https://www.virtualbox.org/ticket/18410 & https://www.virtualbox.org/ticket/17335)  
 monitoring.txt		- steps to manually install and configure Nagios on prebuilt enviornment on the elk nodes where elkmaster would be host and elk02,elk03 clients
 tls_deployment.sh	- Installs and enables TLS for apache, could be sent over ssh or run locally  
