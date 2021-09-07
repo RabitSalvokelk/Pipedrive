@@ -1,8 +1,6 @@
 #!/bin/bash
 
-<<localrun
-#only works if code is run locally on elk host
-if [ $EUID -ne 0 ]
+if [ "$EUID" -ne 0 ]
     then
         echo "Please run this script with sudo access"
         exit
@@ -10,7 +8,6 @@ if [ $EUID -ne 0 ]
     	echo "sudo access confirmed"
     	exit 
 fi
-localrun
 
 #can be run straight from elk host or pushed through SSH (ssh root@elkmstr < /path/code_for_host.sh) provided it is configured
 
