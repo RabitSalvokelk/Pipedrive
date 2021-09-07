@@ -16,8 +16,10 @@ A lot of time
   
 Main code:  
 code_for_host.sh 	- should be run on elk host stack to install and configure elastic, kibana and logstash based on original_task.txt  
-code_for_client 	- should be run on elk client/node, variables adjusted per client/node to install and configure elasticsearch based on original_task.txt  
+code_for_client.sh 	- should be run on elk client/node, variables adjusted per client/node to install and configure elasticsearch based on original_task.txt  
   
+vm_deployment.sh	- creates and installs a new debian machine with unattended install (due to vbox having two issues with unattended install manual fixes had to be made in isolinux-txt.cfg file and pointing at pre and post install scripts. See: https://www.virtualbox.org/ticket/18410 & https://www.virtualbox.org/ticket/17335)  
+tls_deployment.sh	- Installs and enables TLS for apache, could be sent over ssh or run locally  
 
 
 Pieces of code:  
@@ -31,5 +33,5 @@ Machinedeployment will deploy a new debian machine with automatic install (since
 Depending on the enviornment network setup and ssh may have to be installed and configured manually in order to send remote commands to the machines  
 
 Nagios.txt has the steps to install and configure monitoring via Nagios on elkmstr as host and elk02, elk03 as clients  
-
+TLS_deployment.sh script to install and enable TLS for apache2, can be done locally or sent over ssh
 
