@@ -133,3 +133,4 @@ define service {
 sudo systemctl reload nagios
 
 all monitoring should now be available on the elkmstr http://localhost/nagios4/ under services
+
